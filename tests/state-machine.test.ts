@@ -206,4 +206,46 @@ describe("FactoryStateMachine Routing, Loops, and Circuit Breakers", () => {
       }
     }
   });
+
+  it("rejects mismatched stepId or attempt in recordExecuteAttempt, recordAuditVerdict, and recordCriticVerdict", async () => {
+    const sm = await FactoryStateMachine.init(tempDir, "GuardApp", "POC");
+    await sm.recordAnalysis({
+      stage: "POC",
+      summary: "S",
+      functionalRequirements: [],
+      technicalConstraints: [],
+      edgeCases: [],
+      feasibilityMetrics: { complexity: "LOW", risks: [] },
+    });
+    await sm.recordResearch({
+      stage: "POC",
+      existingCodebaseFindings: [],
+      recommendedPatterns: [],
+      dependencies: [],
+      technicalRoadblocks: [],
+      runtimeVerificationStrategy: { testFramework: "v", linterCommand: "l", smokeTestApproach: "s" },
+    });
+    await sm.recordPlan(samplePlan);
+    await sm.lockStepOracle("step-1");
+
+    await expect(
+      sm.recordExecuteAttempt({
+        stepId: "wrong-step",
+        attempt: 1,
+        status: "READY_FOR_AUDIT",
+        filesModified: ["src/core.ts"],
+        implementationSummary: "wrong step",
+      })
+    ).rejects.toThrow(/active step/i);
+
+    await expect(
+      sm.recordExecuteAttempt({
+        stepId: "step-1",
+        attempt: 99,
+        status: "READY_FOR_AUDIT",
+        filesModified: ["src/core.ts"],
+        implementationSummary: "wrong attempt",
+      })
+    ).rejects.toThrow(/attempt/i);
+  });
 });

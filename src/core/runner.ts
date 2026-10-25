@@ -72,7 +72,8 @@ function executeShellCommand(
   });
 }
 
-const VACUOUS_TEST_REGEX = /(?:no test files found|\b0 passed\b|\b0 tests\b)/i;
+const VACUOUS_TEST_REGEX =
+  /(?:no test files found|\b0 passed\b|\b0 tests\b(?!\s*(?:failed|skipped|errored|todo)))/i;
 
 export async function runVerificationGate(
   options: GateExecutionOptions
@@ -114,7 +115,8 @@ export async function runVerificationGate(
   );
   logSections.push(`=== TEST COMMAND (${options.oracleSpec.testCommand}) ===\n${testRun.stdout}\n${testRun.stderr}`);
   const combinedTestOut = `${testRun.stdout}\n${testRun.stderr}`;
-  const isVacuous = VACUOUS_TEST_REGEX.test(combinedTestOut);
+  const isVacuous =
+    combinedTestOut.trim().length === 0 || VACUOUS_TEST_REGEX.test(combinedTestOut);
   const testsPassed = testRun.exitCode === 0 && !testRun.timedOut && !isVacuous;
   if (!testsPassed) {
     if (testRun.timedOut) {

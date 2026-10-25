@@ -37,7 +37,26 @@ export async function scanFilesForCheats(
 
   for (const relPath of relativeFiles) {
     const absPath = resolveSafeWorkspacePath(rootDir, relPath);
-    const content = await readFile(absPath, "utf8");
+    let content: string;
+    try {
+      content = await readFile(absPath, "utf8");
+    } catch (err: unknown) {
+      if (
+        typeof err === "object" &&
+        err !== null &&
+        "code" in err &&
+        (err as { code?: string }).code === "ENOENT"
+      ) {
+        violations.push({
+          file: relPath,
+          line: 0,
+          rule: "MISSING_PLANNED_FILE",
+          snippet: "Planned file was not created",
+        });
+        continue;
+      }
+      throw err;
+    }
     const lines = content.split(/\r?\n/);
 
     lines.forEach((lineText, idx) => {

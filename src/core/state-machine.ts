@@ -173,6 +173,18 @@ export class FactoryStateMachine {
       throw new Error(`Cannot record execute attempt in phase ${this.state.phase}`);
     }
     const validated = ExecuteArtifactSchema.parse(artifact);
+    const plan = await this.loadActivePlan();
+    const activeStep = plan.steps[this.state.currentStepIndex];
+    if (!activeStep || validated.stepId !== activeStep.stepId) {
+      throw new Error(
+        `Active step is ${activeStep?.stepId ?? "none"}, received ${validated.stepId}`
+      );
+    }
+    if (validated.attempt !== this.state.currentStepAttempt) {
+      throw new Error(
+        `Expected attempt ${this.state.currentStepAttempt}, received ${validated.attempt}`
+      );
+    }
     const sDir = this.stepRunDir(validated.stepId);
     await mkdir(sDir, { recursive: true });
     await writeFile(
@@ -196,6 +208,18 @@ export class FactoryStateMachine {
       throw new Error(`Cannot record audit verdict in phase ${this.state.phase}`);
     }
     const validated = AuditArtifactSchema.parse(artifact);
+    const plan = await this.loadActivePlan();
+    const activeStep = plan.steps[this.state.currentStepIndex];
+    if (!activeStep || validated.stepId !== activeStep.stepId) {
+      throw new Error(
+        `Active step is ${activeStep?.stepId ?? "none"}, received ${validated.stepId}`
+      );
+    }
+    if (validated.attempt !== this.state.currentStepAttempt) {
+      throw new Error(
+        `Expected attempt ${this.state.currentStepAttempt}, received ${validated.attempt}`
+      );
+    }
     const allDeterministicTrue = Object.values(validated.deterministicChecks).every(Boolean);
     const effectiveApproved =
       validated.verdict === "APPROVED" &&
@@ -266,6 +290,13 @@ export class FactoryStateMachine {
       throw new Error(`Cannot record critic verdict in phase ${this.state.phase}`);
     }
     const validated = CriticArtifactSchema.parse(artifact);
+    const plan = await this.loadActivePlan();
+    const activeStep = plan.steps[this.state.currentStepIndex];
+    if (!activeStep || validated.stepId !== activeStep.stepId) {
+      throw new Error(
+        `Active step is ${activeStep?.stepId ?? "none"}, received ${validated.stepId}`
+      );
+    }
     const sDir = this.stepRunDir(validated.stepId);
     await mkdir(sDir, { recursive: true });
     await writeFile(join(sDir, "critic-review.json"), JSON.stringify(validated, null, 2), "utf8");
@@ -294,7 +325,6 @@ export class FactoryStateMachine {
     if (history) {
       history.status = "APPROVED";
     }
-    const plan = await this.loadActivePlan();
     if (this.state.currentStepIndex + 1 < plan.steps.length) {
       this.state.currentStepIndex += 1;
       this.state.currentStepAttempt = 1;

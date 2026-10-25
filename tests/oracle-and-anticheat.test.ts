@@ -76,4 +76,10 @@ describe("Oracle SHA-256 Lock and Anti-Cheat Scanner", () => {
     expect(cleanReport.clean).toBe(true);
     expect(cleanReport.violations).toEqual([]);
   });
+
+  it("records a MISSING_PLANNED_FILE violation instead of throwing ENOENT when a file is missing", async () => {
+    const report = await scanFilesForCheats(tempDir, ["src/non-existent.ts"]);
+    expect(report.clean).toBe(false);
+    expect(report.violations[0]?.rule).toBe("MISSING_PLANNED_FILE");
+  });
 });
