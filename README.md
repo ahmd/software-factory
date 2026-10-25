@@ -1,5 +1,10 @@
 # Multi-Agent Software Factory (`POC → MVP → V1 → V2 → Vx`)
 
+[![CI](https://github.com/ahmd/software-factory/actions/workflows/ci.yml/badge.svg)](https://github.com/ahmd/software-factory/actions/workflows/ci.yml)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.6-3178C6?logo=typescript&logoColor=white)
+![Zero-Trust Oracle](https://img.shields.io/badge/Verification-SHA--256%20Oracle-10b981)
+![Architecture](https://img.shields.io/badge/Agents-6--Agent%20Pipeline-6366f1)
+
 A strict 6-agent software engineering system and deterministic verification gatekeeper (`factory-ctl`) inspired by the *Call of Duty: Modern Warfare 2* (`momo5502`) autonomous rebuild workflow.
 
 - [Installation](#installation)
