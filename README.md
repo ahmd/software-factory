@@ -2,10 +2,45 @@
 
 A strict 6-agent software engineering system and deterministic verification gatekeeper (`factory-ctl`) inspired by the *Call of Duty: Modern Warfare 2* (`momo5502`) autonomous rebuild workflow.
 
+- [Installation](#installation)
+  - [Antigravity](#antigravity)
+  - [Manual / Git Clone](#manual--git-clone)
+- [Architecture](#architecture)
+- [CLI Usage (`factory-ctl`)](#cli-usage-factory-ctl)
+- [Running Tests](#running-tests)
+
+---
+
+## Installation
+
+### Antigravity
+
+Install **Software Factory** as a plugin directly from this repository:
+
+```bash
+agy plugin install https://github.com/ahmd/software-factory
+```
+
+Antigravity automatically discovers and loads:
+- **Skill:** `/software-factory` ([`skills/software-factory/SKILL.md`](./skills/software-factory/SKILL.md))
+- **6 Specialist Subagents:** `analysis-agent`, `research-agent`, `plan-agent`, `execute-agent`, `auditor-agent`, `critic-agent` ([`agents/`](./agents))
+- **Always-On Rules:** MW2 Zero-Trust Verification Standard ([`rules/AGENTS.md`](./rules/AGENTS.md))
+
+Reinstall with the same command at any time to update.
+
+### Manual / Git Clone
+
+```bash
+git clone https://github.com/ahmd/software-factory.git ~/.gemini/config/plugins/software-factory
+cd ~/.gemini/config/plugins/software-factory && npm install
+```
+
+---
+
 ## Architecture
 
 1. **Macro Stage-Gates (`POC → MVP → V1 → V2 → Vx`):**
-   Every build progresses through ordered maturity stages (`POC`, `MVP`, `V1`, `V2`, `Vx`). Within a stage, all steps run autonomously; at the end of each working stage (`AWAITING_STAGE_APPROVAL`), the pipeline updates [`ROADMAP.md`](file:///c:/Users/ahmd-/Projects/TestProject/src/core/state-machine.ts) and pauses for human review.
+   Every build progresses through ordered maturity stages (`POC`, `MVP`, `V1`, `V2`, `Vx`). Within a stage, all steps run autonomously; at the end of each working stage (`AWAITING_STAGE_APPROVAL`), the pipeline updates `ROADMAP.md` and pauses for human review.
 
 2. **The 6 Specialist Agents ([`src/agents/personas.ts`](./src/agents/personas.ts)):**
    - **`analysis-agent`** *(Read-Only)*: Deconstructs requirements into core technical constraints, edge cases, and feasibility metrics (`analysis.json`).
@@ -16,6 +51,8 @@ A strict 6-agent software engineering system and deterministic verification gate
      - **`ORACLE_SETUP` Mode (Before Execute):** Writes executable acceptance tests and locks them with `SHA-256` via `factory-ctl lock-oracle`.
      - **`AUDIT_GATE` Mode (After Execute):** Runs `factory-ctl verify-step` (SHA-256 lock check, static anti-cheat scan, test execution, linter, and timed runtime smoke benchmark) + semantic anti-fake inspection (`audit-attempt-<n>.json`).
    - **`critic-agent`** *(Read-Only)*: Reviews Auditor-approved code for architectural integrity, maintainability, security, and scalability (`critic-review.json`).
+
+---
 
 ## CLI Usage (`factory-ctl`)
 

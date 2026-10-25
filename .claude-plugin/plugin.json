@@ -1,0 +1,8 @@
+{
+  "name": "software-factory",
+  "version": "1.0.0",
+  "description": "Strict 6-agent software engineering workflow (Analysis -> Research -> Plan -> Execute <-> Auditor -> Critic) across POC -> MVP -> V1 -> Vx stages with SHA-256 Oracle locking and GitHub Issue/PR sync.",
+  "repository": "https://github.com/ahmd/software-factory",
+  "homepage": "https://github.com/ahmd/software-factory#antigravity",
+  "license": "MIT"
+}
