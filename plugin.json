@@ -1,0 +1,11 @@
+{
+  "name": "software-factory",
+  "displayName": "Multi-Agent Software Factory",
+  "description": "Strict 6-agent software engineering workflow (Analysis -> Research -> Plan -> Execute <-> Auditor -> Critic) across POC -> MVP -> V1 -> Vx stages with SHA-256 Oracle locking and GitHub Issue/PR sync.",
+  "version": "1.0.0",
+  "suggestedPrompts": [
+    "Run /software-factory to build a new application starting at the POC stage",
+    "Audit the current step with factory-ctl verify-step and dispatch the Auditor Agent",
+    "Advance our project from POC to MVP using the 6-agent Software Factory pipeline"
+  ]
+}
