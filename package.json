@@ -8,6 +8,7 @@
   },
   "scripts": {
     "test": "vitest run",
+    "typecheck": "tsc --noEmit",
     "factory-ctl": "tsx src/cli/factory-ctl.ts"
   },
   "dependencies": {
