@@ -1,0 +1,22 @@
+{
+  "name": "software-factory",
+  "version": "1.0.0",
+  "description": "Multi-Agent Software Factory (Analysis, Research, Plan, Execute, Auditor, Critic) with SHA-256 Oracle Lock and GitHub Issues/PR sync",
+  "type": "module",
+  "bin": {
+    "factory-ctl": "./src/cli/factory-ctl.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "factory-ctl": "tsx src/cli/factory-ctl.ts"
+  },
+  "dependencies": {
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.4"
+  }
+}
